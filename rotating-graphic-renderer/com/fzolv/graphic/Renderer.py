@@ -14,7 +14,7 @@ def resetter():
     global CLL
     for l in buf:
         CLL += PL
-
+    #CLL += PL
 
 def padnadd():
     for i in range(len(buf)):
@@ -31,14 +31,25 @@ def flipper():
     theta = math.cos(tilt * PI / 180)
     for l in buf:
         if theta > 0:
-            i = round(len(l)*(1-theta)/2)
-            disp.append(l[i:len(l)-i].ljust(m).center(5*m))
+            disp.append(rep(l).ljust(m).center(5*m))
         else:
-            i = round(len(l)*(1-theta)/2)
-            disp.append(l[i:-i:-1].rjust(m).center(3*m))
-    tilt += 8
+            disp.append(rep(l).rjust(m).center(3*m))
+    tilt += 4
     tilt %= 360
 
+def rep(str):
+    rp = ''
+    p=-100000
+    theta = math.cos(tilt * PI / 180)
+    n = len(str)
+    for i in range(n):
+        i_t = i if theta > 0 else n-i-1
+        t = round(i_t*theta)
+        if p == t:
+            continue
+        p = t
+        rp += str[i_t]
+    return rp
 
 if __name__ == '__main__':
     m = 0
@@ -49,14 +60,15 @@ if __name__ == '__main__':
             m = len(line)
 
     resetter()
-    #padnadd()
+    padnadd()
     os.system('cls')
     sys.stdout.write('\n\n\n')
     while 1:
         flipper()
         [sys.stdout.write(l+'\n') for l in disp]
+        #print(tilt)
         sys.stdout.flush()
         #For best visual use 0.04
-        time.sleep(0.05)
+        time.sleep(0.06)
         sys.stdout.write(CLL)
         sys.stdout.flush()
